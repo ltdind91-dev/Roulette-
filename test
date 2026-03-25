@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu des 6 Cases - Ferrari Architectes</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 { color: #333; margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            grid-template-rows: repeat(2, 120px);
+            gap: 20px;
+        }
+
+        .case {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .case:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+
+        /* États de réponse */
+        .wrong { background-color: #ffcccc !important; border-color: #e74c3c !important; color: #e74c3c; }
+        .correct { 
+            background-color: #d4edda !important; 
+            border-color: #27ae60 !important; 
+            color: #27ae60; 
+            transform: scale(1.1);
+        }
+
+        #message { margin-top: 30px; font-weight: bold; height: 20px; }
+        button { margin-top: 20px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; background: #333; color: white; display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>Trouvez la bonne case</h1>
+
+    <div class="grid" id="grid">
+        <div class="case" onclick="check(this, 0)">1</div>
+        <div class="case" onclick="check(this, 1)">2</div>
+        <div class="case" onclick="check(this, 2)">3</div>
+        <div class="case" onclick="check(this, 3)">4</div>
+        <div class="case" onclick="check(this, 4)">5</div>
+        <div class="case" onclick="check(this, 5)">6</div>
+    </div>
+
+    <div id="message"></div>
+    <button id="resetBtn" onclick="resetGame()">Recommencer</button>
+
+    <script>
+        // On définit la case gagnante au hasard (entre 0 et 5)
+        let winningIndex = Math.floor(Math.random() * 6);
+        let gameOver = false;
+
+        function check(element, index) {
+            if (gameOver) return;
+
+            if (index === winningIndex) {
+                element.classList.add('correct');
+                document.getElementById('message').innerText = "Bravo ! C'est la bonne case.";
+                document.getElementById('message').style.color = "#27ae60";
+                document.getElementById('resetBtn').style.display = "block";
+                gameOver = true;
+            } else {
+                element.classList.add('wrong');
+                document.getElementById('message').innerText = "Essaye encore...";
+                document.getElementById('message').style.color = "#e74c3c";
+            }
+        }
+
+        function resetGame() {
+            winningIndex = Math.floor(Math.random() * 6);
+            gameOver = false;
+            document.getElementById('message').innerText = "";
+            document.getElementById('resetBtn').style.display = "none";
+            const cases = document.querySelectorAll('.case');
+            cases.forEach(c => {
+                c.classList.remove('correct', 'wrong');
+            });
+        }
+    </script>
+</body>
+</html>
